@@ -91,18 +91,33 @@ erDiagram
 
 ---
 
-## 4. Analysis Plan (Key Business Questions)
+## 4. Analysis Plan (Key Business Questions & Actual Answers)
 
-| # | Question | Where Answered |
+All figures below were calculated directly from the data inserted in `01_writewise_dataset.sql` (15 users, 15 subscriptions, 30 usage records, total documents created = 347) and cross-checked so every breakdown reconciles back to that 347 total.
+
+| # | Question | Answer (computed from the dataset) |
 |---|---|---|
-| 1 | How has user growth been over time? (signup trend) | `02_basic_sql_analysis.sql` Q3 |
-| 2 | What is overall user engagement? (documents/user) | `02_basic_sql_analysis.sql` Q4–Q8; `03_advanced_sql_analysis.sql` Q1 |
-| 3 | Which user segments are most engaged? | `03_advanced_sql_analysis.sql` Q2 |
-| 4 | Which subscription plans have the highest usage? | `03_advanced_sql_analysis.sql` Q3 |
-| 5 | How does Free vs. Paid usage compare? | `03_advanced_sql_analysis.sql` Q8 |
-| 6 | Which users are inactive / at risk of churn? | `03_advanced_sql_analysis.sql` Q4; `02_basic_sql_analysis.sql` Q9–Q11 |
-| 7 | Comparison of engagement across segments and plans | `03_advanced_sql_analysis.sql` Q2, Q3, Q5, Q6 |
-| 8 | Additional business question (from findings) | See Section 7 below |
+| 1 | How has user growth been over time? (signup trend) | Signups by month: **Jan = 4, Feb = 3, Mar = 4, Apr = 4** (15 users total, Jan–Apr 2026). Growth is steady rather than accelerating — roughly 3–4 new users every month, no single month drives acquisition. |
+| 2 | What is overall user engagement? (documents/user) | **347 total documents** across 30 activity records → **11.57 docs/activity record** on average. Spread across all 15 users (including the 2 with zero activity) → **23.13 docs/user** on average. Range: **0 (min) to 30 (max)** in a single activity record. |
+| 3 | Which user segments are most engaged? | **Enterprise: 221 docs / 5 users = 44.2 avg** (highest) → **Small Business: 109 docs / 5 users = 21.8 avg** → **Individual: 17 docs / 5 users = 3.4 avg** (lowest). Enterprise users are roughly **13x** more engaged than Individual users on average. |
+| 4 | Which subscription plans have the highest usage? | **Business: 117 docs / 2 users = 58.5 avg** (highest) → **Pro: 177 docs / 5 users = 35.4 avg** → **Starter: 42 docs / 3 users = 14.0 avg** → **Free: 11 docs / 5 users = 2.2 avg** (lowest). Usage scales with plan tier almost monotonically. |
+| 5 | How does Free vs. Paid usage compare? | **Free: 11 docs / 5 users = 2.2 avg/user.** **Paid (Starter+Pro+Business combined): 336 docs / 10 users = 33.6 avg/user.** Paid users are **~15x** more engaged than Free users. |
+| 6 | Which users are inactive / at risk of churn? | **2 users have zero usage logs at all: Divya (user 10) and Suresh (user 13).** **3 subscriptions have ended: Sneha (user 4, Free), Kiran (user 7, Starter), Divya (user 10, Free)** — i.e., **20% churn rate** (3 of 15). Engagement-tier breakdown across all 15 users: **Inactive (0 docs) = 2 users, Low (1–10) = 4 users (Arjun, Sneha, Kiran, Neha), Moderate (11–30) = 5 users (Priya, Rohit, Aditya, Kavya, Nikhil), High (>30) = 4 users (Rahul, Vikram, Ananya, Meera).** |
+| 7 | Comparison of engagement across segments and plans | Segment ranking: **Enterprise (44.2) > Small Business (21.8) > Individual (3.4)**. Plan ranking: **Business (58.5) > Pro (35.4) > Starter (14.0) > Free (2.2)**. Both rankings point the same direction — segments/plans associated with paying more also use the product more, reinforcing that engagement and monetization move together here. |
+
+**Supporting detail — monthly document volume (all users combined):**
+
+| Month | Total Documents | Activity Records | Avg Docs/Record | Change vs. Prior Month |
+|---|---|---|---|---|
+| Jan | 20 | 4 | 5.00 | — |
+| Feb | 54 | 7 | 7.71 | +34 |
+| Mar | 97 | 9 | 10.78 | +43 |
+| Apr | 116 | 7 | 16.57 | +19 |
+| May | 60 | 3 | 20.00 | **−56** |
+
+Platform-wide volume climbed every month from January through April, then dropped sharply in May — driven by fewer users logging activity that month (only users 12, 14, 15), even though those remaining users each posted their highest individual numbers.
+
+**Individual user ranking by total documents (highest to lowest):** Ananya (69) > Rahul (55) > Meera (48) > Vikram (43) > Kavya (30) > Rohit (26) > Nikhil (23) > Priya (20) > Aditya (15) > Arjun (9) > Kiran (7) > Sneha (1) = Neha (1) > Divya (0) = Suresh (0).
 
 **SQL techniques demonstrated:** `GROUP BY`/`HAVING`, aggregate functions (`SUM`, `AVG`, `MIN`, `MAX`, `COUNT`), `CASE` bucketing, `LEFT JOIN` + `IS NULL` anti-joins, `INNER JOIN` across 3 tables, CTEs (`WITH`), window functions (`RANK() OVER`, `LAG() OVER`), date functions (`MONTH()`).
 
@@ -123,12 +138,12 @@ erDiagram
 
 ## 6. Key Findings
 
-- **Engagement is uneven across the user base** — total documents per user ranges from 0 up to 78+, with a small group of power users and several low/no-activity users.
-- **Two users (Divya – user 10, Suresh – user 13) have zero recorded usage activity** despite holding subscriptions — clear re-engagement/churn-risk candidates.
-- **Enterprise segment shows the highest average documents/user**, followed by Small Business, then Individual — suggesting higher willingness-to-pay segments are also the most active.
-- **Higher-tier plans (Pro, Business) show higher average usage than Starter/Free**, and **Paid users overall show substantially higher engagement than Free users** — a signal the Free tier may under-activate users rather than convert them.
-- **Platform-wide monthly document volume rose from January through April 2026, then dipped in May** — an early plateau signal worth monitoring.
-- **3 of 15 subscriptions (20%) have ended**, and churned users generally show lower engagement than active users — consistent with engagement being a leading indicator of churn.
+- **Engagement is uneven across the user base** — total documents per user ranges from **0 (Divya, Suresh) to 69 (Ananya)**, with 4 users classified High (>30 docs), 5 Moderate (11–30), 4 Low (1–10), and 2 Inactive (0).
+- **Two users (Divya – user 10, Suresh – user 13) have zero recorded usage activity at all** despite holding subscriptions — clear re-engagement/churn-risk candidates.
+- **Enterprise segment shows the highest average engagement (44.2 docs/user)**, more than double Small Business (21.8) and roughly 13x Individual (3.4).
+- **Business-tier subscribers show the highest average engagement (58.5 docs/user)**, followed by Pro (35.4), Starter (14.0), and Free (2.2). **Paid users overall (33.6 avg) are ~15x more engaged than Free users (2.2 avg).**
+- **Platform-wide monthly document volume rose steadily from January (20) through April (116), then dropped to 60 in May** — a plateau/decline signal worth monitoring, though driven mainly by fewer users logging activity that month rather than a drop in per-user output.
+- **3 of 15 subscriptions (20%) have ended** (Sneha, Kiran, Divya), and two of those three churned users (Sneha: 1 doc, Divya: 0 docs) were also among the lowest-engagement users in the dataset — consistent with engagement being a leading indicator of churn.
 
 ---
 
