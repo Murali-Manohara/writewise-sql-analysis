@@ -1,6 +1,6 @@
 # WriteWise — AI Writing Platform | SQL Analytics Project
 
-**Type:** Graded SQL Project · **Database:** MySQL · **Author's approach:** End-to-end — business understanding → dataset design → SQL setup → analysis → recommendations
+**Type:** SQL Project · **Database:** MySQL · **Author's approach:** End-to-end — business understanding → dataset design → SQL setup → analysis → recommendations
 
 ---
 
