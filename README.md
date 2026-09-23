@@ -143,7 +143,7 @@ Platform-wide volume climbed every month from January through April, then droppe
 - **3.Q2) Enterprise segment shows the highest average engagement (44.2 docs/user)**, more than double Small Business (21.8) and roughly 13x Individual (3.4).
 - **3.Q3) Business-tier subscribers show the highest average engagement (58.5 docs/user)**, followed by Pro (35.4), Starter (14.0), and Free (2.2). **Paid users overall (33.6 avg) are ~15x more engaged than Free users (2.2 avg).**
 - **3.Q7) Platform-wide monthly document volume rose steadily from January (20) through April (116), then dropped to 60 in May** — a plateau/decline signal worth monitoring, though driven mainly by fewer users logging activity that month rather than a drop in per-user output.
-- **2. Q9) 3 of 15 subscriptions (20%) have ended** (Sneha, Kiran, Divya), and two of those three churned users (Sneha: 1 doc, Divya: 0 docs) were also among the lowest-engagement users in the dataset — consistent with engagement being a leading indicator of churn.
+- **2.Q9) 3 of 15 subscriptions (20%) have ended** (Sneha, Kiran, Divya), and two of those three churned users (Sneha: 1 doc, Divya: 0 docs) were also among the lowest-engagement users in the dataset — consistent with engagement being a leading indicator of churn.
 
 ---
 
